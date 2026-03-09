@@ -1,0 +1,880 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Customer Briefing Form</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Sarabun', 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      min-height: 100vh;
+      padding: 30px 16px;
+      color: #e0e0e0;
+    }
+
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #f0c040;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 8px rgba(240,192,64,0.3);
+    }
+
+    .header p {
+      color: #aaa;
+      margin-top: 6px;
+      font-size: 0.95rem;
+    }
+
+    .voice-banner {
+      background: rgba(240,192,64,0.1);
+      border: 1px solid rgba(240,192,64,0.3);
+      border-radius: 12px;
+      padding: 14px 20px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: #f0c040;
+    }
+
+    .voice-banner span.icon { font-size: 1.5rem; }
+
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      backdrop-filter: blur(10px);
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #f0c040;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(240,192,64,0.2);
+    }
+
+    .field-group {
+      margin-bottom: 22px;
+    }
+
+    .field-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #ccc;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .field-group label .required {
+      color: #f0c040;
+      margin-left: 3px;
+    }
+
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"],
+    input[type="date"],
+    textarea,
+    select {
+      width: 100%;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: #e0e0e0;
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: border-color 0.2s, background 0.2s;
+      outline: none;
+      resize: vertical;
+    }
+
+    input[type="text"]:focus,
+    input[type="tel"]:focus,
+    input[type="email"]:focus,
+    input[type="date"]:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #f0c040;
+      background: rgba(240,192,64,0.07);
+    }
+
+    input[type="text"].listening,
+    textarea.listening {
+      border-color: #e74c3c;
+      background: rgba(231,76,60,0.07);
+      animation: pulse-border 1s infinite;
+    }
+
+    @keyframes pulse-border {
+      0%, 100% { border-color: #e74c3c; box-shadow: 0 0 0 0 rgba(231,76,60,0.3); }
+      50% { border-color: #ff6b6b; box-shadow: 0 0 0 4px rgba(231,76,60,0.1); }
+    }
+
+    textarea { min-height: 90px; }
+
+    select option { background: #1a1a2e; color: #e0e0e0; }
+
+    /* Mic button */
+    .mic-btn {
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 2px solid rgba(240,192,64,0.4);
+      background: rgba(240,192,64,0.1);
+      color: #f0c040;
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      margin-top: 0;
+    }
+
+    .mic-btn:hover {
+      background: rgba(240,192,64,0.2);
+      border-color: #f0c040;
+    }
+
+    .mic-btn.active {
+      background: rgba(231,76,60,0.25);
+      border-color: #e74c3c;
+      color: #e74c3c;
+      animation: mic-pulse 1s infinite;
+    }
+
+    @keyframes mic-pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .mic-btn.textarea-mic {
+      margin-top: 0;
+    }
+
+    /* Status chip */
+    .status-chip {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: #e74c3c;
+      margin-top: 4px;
+      padding-left: 4px;
+    }
+
+    .status-chip.visible {
+      display: flex;
+    }
+
+    .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #e74c3c;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.2; }
+    }
+
+    /* Checkbox group */
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.88rem;
+      transition: all 0.2s;
+    }
+
+    .checkbox-label:hover {
+      border-color: rgba(240,192,64,0.4);
+      background: rgba(240,192,64,0.07);
+    }
+
+    .checkbox-label input[type="checkbox"] {
+      accent-color: #f0c040;
+      width: 16px;
+      height: 16px;
+    }
+
+    /* File upload */
+    .file-upload-area {
+      border: 2px dashed rgba(240,192,64,0.3);
+      border-radius: 12px;
+      padding: 28px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: rgba(240,192,64,0.03);
+    }
+
+    .file-upload-area:hover {
+      border-color: #f0c040;
+      background: rgba(240,192,64,0.07);
+    }
+
+    .file-upload-area.drag-over {
+      border-color: #f0c040;
+      background: rgba(240,192,64,0.12);
+    }
+
+    .file-upload-area .icon { font-size: 2.5rem; margin-bottom: 10px; }
+    .file-upload-area p { font-size: 0.9rem; color: #aaa; margin-bottom: 6px; }
+    .file-upload-area small { color: #777; font-size: 0.78rem; }
+
+    #fileInput { display: none; }
+
+    .file-list { margin-top: 14px; }
+    .file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 9px 14px;
+      margin-top: 8px;
+      font-size: 0.85rem;
+    }
+
+    .file-item span { color: #ccc; }
+    .file-remove {
+      cursor: pointer;
+      color: #e74c3c;
+      font-size: 1rem;
+      background: none;
+      border: none;
+      padding: 0 4px;
+    }
+
+    /* Submit */
+    .submit-section {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #f0c040, #e09000);
+      color: #1a1a2e;
+      border: none;
+      border-radius: 50px;
+      padding: 15px 52px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 20px rgba(240,192,64,0.3);
+    }
+
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 28px rgba(240,192,64,0.45);
+    }
+
+    /* Global mic button */
+    .global-mic {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f0c040, #e09000);
+      color: #1a1a2e;
+      font-size: 1.6rem;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 24px rgba(240,192,64,0.4);
+      z-index: 999;
+      transition: all 0.2s;
+    }
+
+    .global-mic:hover { transform: scale(1.08); }
+    .global-mic.active {
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      box-shadow: 0 4px 24px rgba(231,76,60,0.5);
+      animation: mic-pulse 1s infinite;
+    }
+
+    .global-mic-label {
+      position: fixed;
+      bottom: 100px;
+      right: 20px;
+      background: rgba(30,30,50,0.95);
+      color: #f0c040;
+      font-size: 0.78rem;
+      border-radius: 8px;
+      padding: 6px 12px;
+      display: none;
+      white-space: nowrap;
+      border: 1px solid rgba(240,192,64,0.3);
+      z-index: 998;
+    }
+
+    .global-mic-label.show { display: block; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-80px);
+      background: rgba(30,30,50,0.97);
+      color: #e0e0e0;
+      border: 1px solid rgba(240,192,64,0.3);
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-size: 0.9rem;
+      z-index: 9999;
+      transition: transform 0.3s ease;
+      white-space: nowrap;
+      max-width: 90vw;
+      white-space: normal;
+      text-align: center;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast.success { border-color: rgba(46,204,113,0.5); color: #2ecc71; }
+    .toast.error { border-color: rgba(231,76,60,0.5); color: #e74c3c; }
+
+    @media (max-width: 600px) {
+      .card { padding: 20px 18px; }
+      .header h1 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>📋 Customer Briefing Form</h1>
+    <p>กรอกข้อมูลด้วยการพิมพ์ หรือกดปุ่ม 🎤 เพื่อพูดกรอกข้อมูล</p>
+  </div>
+
+  <div class="voice-banner">
+    <span class="icon">🎤</span>
+    <span>รองรับการป้อนข้อมูลด้วยเสียง — กดปุ่มไมค์ข้างช่องแล้วพูดเป็นภาษาไทยหรืออังกฤษได้เลย</span>
+  </div>
+
+  <form id="briefingForm" novalidate>
+
+    <!-- Section 1: Project Info -->
+    <div class="card">
+      <div class="card-title">🏷️ ข้อมูลโปรเจกต์</div>
+
+      <div class="field-group">
+        <label>Project <span class="required">*</span></label>
+        <div class="input-wrap">
+          <input type="text" id="project" name="project" placeholder="ชื่อโปรเจกต์" />
+          <button type="button" class="mic-btn" data-target="project" title="พูดกรอกข้อมูล">🎤</button>
+        </div>
+        <div class="status-chip" id="status-project"><div class="dot"></div> กำลังฟัง...</div>
+      </div>
+
+      <div class="field-group">
+        <label>Brand <span class="required">*</span></label>
+        <div class="input-wrap">
+          <input type="text" id="brand" name="brand" placeholder="ชื่อแบรนด์" />
+          <button type="button" class="mic-btn" data-target="brand" title="พูดกรอกข้อมูล">🎤</button>
+        </div>
+        <div class="status-chip" id="status-brand"><div class="dot"></div> กำลังฟัง...</div>
+      </div>
+
+      <div class="field-group">
+        <label>Background</label>
+        <div class="input-wrap">
+          <textarea id="background" name="background" placeholder="ข้อมูลพื้นหลังของโปรเจกต์ / แบรนด์"></textarea>
+          <button type="button" class="mic-btn textarea-mic" data-target="background" title="พูดกรอกข้อมูล">🎤</button>
+        </div>
+        <div class="status-chip" id="status-background"><div class="dot"></div> กำลังฟัง...</div>
+      </div>
+
+      <div class="field-group">
+        <label>Requirement (ความต้องการหลัก)</label>
+        <div class="input-wrap">
+          <input type="text" id="requirement" name="requirement" placeholder="เช่น งานครบรอบ 80 ปี" />
+          <button type="button" class="mic-btn" data-target="requirement" title="พูดกรอกข้อมูล">🎤</button>
+        </div>
+        <div class="status-chip" id="status-requirement"><div class="dot"></div> กำลังฟัง...</div>
+      </div>
+    </div>
+
+    <!-- Section 2: Strategy -->
+    <div class="card">
+      <div class="card-title">🎯 เป้าหมายและกลุ่มเป้าหมาย</div>
+
+      <div class="field-group">
+        <label>Objective (วัตถุประสงค์)</label>
+        <div class="input-wrap">
+          <textarea id="objective" name="objective" placeholder="เช่น สร้าง PR / Awareness / กระตุ้นยอดขาย"></textarea>
+          <button type="button" class="mic-btn textarea-mic" data-target="objective" title="พูดกรอกข้อมูล">🎤</button>
+        </div>
+        <div class="status-chip" id="status-objective"><div class="dot"></div> กำลังฟัง...</div>
+      </div>
+
+      <div class="field-group">
+        <label>Target (กลุ่มเป้าหมาย)</label>
+        <div class="input-wrap">
+          <textarea id="target" name="target" placeholder="เช่น นักท่องเที่ยว / คนในท้องถิ่น / นักสะสม"></textarea>
+          <button type="button" class="mic-btn textarea-mic" data-target="target" title="พูดกรอกข้อมูล">🎤</button>
+        </div>
+        <div class="status-chip" id="status-target"><div class="dot"></div> กำลังฟัง...</div>
+      </div>
+
+      <div class="field-group">
+        <label>Details (รายละเอียดเพิ่มเติม)</label>
+        <div class="input-wrap">
+          <textarea id="details" name="details" placeholder="รายละเอียดของงานหรือแคมเปญ"></textarea>
+          <button type="button" class="mic-btn textarea-mic" data-target="details" title="พูดกรอกข้อมูล">🎤</button>
+        </div>
+        <div class="status-chip" id="status-details"><div class="dot"></div> กำลังฟัง...</div>
+      </div>
+    </div>
+
+    <!-- Section 3: Activity & Platform -->
+    <div class="card">
+      <div class="card-title">📱 กิจกรรมและแพลตฟอร์ม</div>
+
+      <div class="field-group">
+        <label>Activity (กิจกรรม)</label>
+        <div class="input-wrap">
+          <textarea id="activity" name="activity" placeholder="รายละเอียดกิจกรรมที่ต้องการ"></textarea>
+          <button type="button" class="mic-btn textarea-mic" data-target="activity" title="พูดกรอกข้อมูล">🎤</button>
+        </div>
+        <div class="status-chip" id="status-activity"><div class="dot"></div> กำลังฟัง...</div>
+      </div>
+
+      <div class="field-group">
+        <label>Platform (แพลตฟอร์ม)</label>
+        <div class="checkbox-group">
+          <label class="checkbox-label"><input type="checkbox" name="platform" value="Facebook" /> Facebook</label>
+          <label class="checkbox-label"><input type="checkbox" name="platform" value="Instagram" /> Instagram</label>
+          <label class="checkbox-label"><input type="checkbox" name="platform" value="TikTok" /> TikTok</label>
+          <label class="checkbox-label"><input type="checkbox" name="platform" value="YouTube" /> YouTube</label>
+          <label class="checkbox-label"><input type="checkbox" name="platform" value="Line OA" checked /> Line OA</label>
+          <label class="checkbox-label"><input type="checkbox" name="platform" value="Twitter/X" /> Twitter/X</label>
+          <label class="checkbox-label"><input type="checkbox" name="platform" value="Website" /> Website</label>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Platform อื่นๆ</label>
+        <div class="input-wrap">
+          <input type="text" id="platformOther" name="platformOther" placeholder="ระบุแพลตฟอร์มอื่น..." />
+          <button type="button" class="mic-btn" data-target="platformOther" title="พูดกรอกข้อมูล">🎤</button>
+        </div>
+        <div class="status-chip" id="status-platformOther"><div class="dot"></div> กำลังฟัง...</div>
+      </div>
+
+      <div class="field-group">
+        <label>Member (ระบบสมาชิก)</label>
+        <div class="input-wrap">
+          <input type="text" id="member" name="member" placeholder="เช่น Line OA, App, etc." />
+          <button type="button" class="mic-btn" data-target="member" title="พูดกรอกข้อมูล">🎤</button>
+        </div>
+        <div class="status-chip" id="status-member"><div class="dot"></div> กำลังฟัง...</div>
+      </div>
+    </div>
+
+    <!-- Section 4: Promotion & Timing -->
+    <div class="card">
+      <div class="card-title">🎁 โปรโมชันและกำหนดการ</div>
+
+      <div class="field-group">
+        <label>Promotion / Privilege</label>
+        <div class="input-wrap">
+          <textarea id="promotion" name="promotion" placeholder="รายละเอียดโปรโมชัน หรือสิทธิพิเศษ"></textarea>
+          <button type="button" class="mic-btn textarea-mic" data-target="promotion" title="พูดกรอกข้อมูล">🎤</button>
+        </div>
+        <div class="status-chip" id="status-promotion"><div class="dot"></div> กำลังฟัง...</div>
+      </div>
+
+      <div class="field-group">
+        <label>Tentative Timing (กำหนดการเบื้องต้น)</label>
+        <div class="input-wrap">
+          <input type="text" id="timing" name="timing" placeholder="เช่น เมษายน 2568 หรือ Q2 2025" />
+          <button type="button" class="mic-btn" data-target="timing" title="พูดกรอกข้อมูล">🎤</button>
+        </div>
+        <div class="status-chip" id="status-timing"><div class="dot"></div> กำลังฟัง...</div>
+      </div>
+    </div>
+
+    <!-- Section 5: File Upload -->
+    <div class="card">
+      <div class="card-title">📎 แนบไฟล์</div>
+      <p style="font-size:0.85rem; color:#aaa; margin-bottom:16px;">Logo (.AI / .PNG) / รูปภาพ / VDO footage</p>
+
+      <div class="file-upload-area" id="dropZone">
+        <div class="icon">📁</div>
+        <p>ลากไฟล์มาวางที่นี่ หรือ <strong style="color:#f0c040">คลิกเพื่อเลือกไฟล์</strong></p>
+        <small>รองรับ: .ai, .png, .jpg, .gif, .mp4, .mov, .pdf (สูงสุด 50MB ต่อไฟล์)</small>
+        <input type="file" id="fileInput" name="files" multiple accept=".ai,.png,.jpg,.jpeg,.gif,.mp4,.mov,.pdf,.svg" />
+      </div>
+
+      <div class="file-list" id="fileList"></div>
+    </div>
+
+    <!-- Section 6: Contact -->
+    <div class="card">
+      <div class="card-title">📞 ข้อมูลติดต่อ</div>
+
+      <div class="field-group">
+        <label>ชื่อผู้ติดต่อ <span class="required">*</span></label>
+        <div class="input-wrap">
+          <input type="text" id="contactName" name="contactName" placeholder="ชื่อ - นามสกุล" />
+          <button type="button" class="mic-btn" data-target="contactName" title="พูดกรอกข้อมูล">🎤</button>
+        </div>
+        <div class="status-chip" id="status-contactName"><div class="dot"></div> กำลังฟัง...</div>
+      </div>
+
+      <div class="field-group">
+        <label>เบอร์โทรศัพท์</label>
+        <div class="input-wrap">
+          <input type="tel" id="contactPhone" name="contactPhone" placeholder="08X-XXX-XXXX" />
+          <button type="button" class="mic-btn" data-target="contactPhone" title="พูดกรอกข้อมูล">🎤</button>
+        </div>
+        <div class="status-chip" id="status-contactPhone"><div class="dot"></div> กำลังฟัง...</div>
+      </div>
+
+      <div class="field-group">
+        <label>อีเมล</label>
+        <div class="input-wrap">
+          <input type="email" id="contactEmail" name="contactEmail" placeholder="email@example.com" />
+          <button type="button" class="mic-btn" data-target="contactEmail" title="พูดกรอกข้อมูล">🎤</button>
+        </div>
+        <div class="status-chip" id="status-contactEmail"><div class="dot"></div> กำลังฟัง...</div>
+      </div>
+
+      <div class="field-group">
+        <label>Line ID / Social</label>
+        <div class="input-wrap">
+          <input type="text" id="contactLine" name="contactLine" placeholder="Line ID หรือ social media" />
+          <button type="button" class="mic-btn" data-target="contactLine" title="พูดกรอกข้อมูล">🎤</button>
+        </div>
+        <div class="status-chip" id="status-contactLine"><div class="dot"></div> กำลังฟัง...</div>
+      </div>
+    </div>
+
+    <!-- Submit -->
+    <div class="submit-section">
+      <button type="submit" class="btn-submit">✅ ส่งแบบฟอร์ม</button>
+    </div>
+
+  </form>
+</div>
+
+<!-- Global floating mic -->
+<button class="global-mic" id="globalMic" title="เปิด/ปิดโหมดเสียง">🎤</button>
+<div class="global-mic-label" id="globalMicLabel">กำลังฟัง...</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// VOICE INPUT ENGINE
+// ============================================================
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition = null;
+let currentTarget = null;
+let isListening = false;
+let activeBtn = null;
+
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => { t.className = 'toast'; }, 3200);
+}
+
+function setListening(targetId, btn, on) {
+  const el = document.getElementById(targetId);
+  const statusEl = document.getElementById('status-' + targetId);
+  if (on) {
+    if (el) el.classList.add('listening');
+    if (statusEl) statusEl.classList.add('visible');
+    if (btn) btn.classList.add('active');
+  } else {
+    if (el) el.classList.remove('listening');
+    if (statusEl) statusEl.classList.remove('visible');
+    if (btn) btn.classList.remove('active');
+  }
+}
+
+function startRecognition(targetId, btn) {
+  if (!SpeechRecognition) {
+    showToast('❌ เบราว์เซอร์นี้ไม่รองรับการรับเสียง กรุณาใช้ Chrome', 'error');
+    return;
+  }
+
+  // Stop if already listening to same target
+  if (isListening && currentTarget === targetId) {
+    stopRecognition();
+    return;
+  }
+
+  // Stop any existing session
+  if (recognition) {
+    recognition.abort();
+    if (currentTarget) setListening(currentTarget, activeBtn, false);
+  }
+
+  recognition = new SpeechRecognition();
+  recognition.lang = 'th-TH';
+  recognition.interimResults = true;
+  recognition.continuous = false;
+  recognition.maxAlternatives = 1;
+
+  currentTarget = targetId;
+  activeBtn = btn;
+  isListening = true;
+  setListening(targetId, btn, true);
+
+  let finalTranscript = '';
+  let interimTranscript = '';
+
+  recognition.onresult = (event) => {
+    finalTranscript = '';
+    interimTranscript = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const t = event.results[i][0].transcript;
+      if (event.results[i].isFinal) finalTranscript += t;
+      else interimTranscript += t;
+    }
+    const el = document.getElementById(targetId);
+    if (el) {
+      const existing = el.dataset.confirmed || '';
+      el.value = existing + (finalTranscript || interimTranscript);
+    }
+  };
+
+  recognition.onend = () => {
+    isListening = false;
+    setListening(targetId, btn, false);
+    const el = document.getElementById(targetId);
+    if (el && finalTranscript) {
+      el.dataset.confirmed = el.value;
+    }
+    currentTarget = null;
+    activeBtn = null;
+  };
+
+  recognition.onerror = (e) => {
+    isListening = false;
+    setListening(targetId, activeBtn, false);
+    currentTarget = null;
+    activeBtn = null;
+    if (e.error === 'not-allowed') {
+      showToast('❌ กรุณาอนุญาตให้ใช้ไมโครโฟน', 'error');
+    } else if (e.error !== 'aborted') {
+      showToast('⚠️ ไม่ได้ยินเสียง ลองอีกครั้ง', 'error');
+    }
+  };
+
+  recognition.start();
+  showToast('🎤 กำลังฟัง... พูดได้เลย');
+}
+
+function stopRecognition() {
+  if (recognition) recognition.stop();
+}
+
+// Attach mic buttons
+document.querySelectorAll('.mic-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.target;
+    startRecognition(target, btn);
+  });
+});
+
+// Global mic — focuses on whatever field is currently focused or last touched
+let lastFocusedField = null;
+
+document.querySelectorAll('input[type="text"], input[type="tel"], input[type="email"], textarea').forEach(el => {
+  el.addEventListener('focus', () => { lastFocusedField = el.id; });
+});
+
+const globalMic = document.getElementById('globalMic');
+const globalMicLabel = document.getElementById('globalMicLabel');
+
+globalMic.addEventListener('click', () => {
+  if (isListening) {
+    stopRecognition();
+    globalMic.classList.remove('active');
+    globalMicLabel.classList.remove('show');
+    return;
+  }
+  const target = lastFocusedField || 'project';
+  const fieldEl = document.getElementById(target);
+  if (fieldEl) fieldEl.focus();
+  globalMic.classList.add('active');
+  globalMicLabel.classList.add('show');
+  startRecognition(target, null);
+
+  const originalOnEnd = () => {
+    globalMic.classList.remove('active');
+    globalMicLabel.classList.remove('show');
+  };
+  if (recognition) {
+    const prev = recognition.onend;
+    recognition.onend = (e) => { prev && prev(e); originalOnEnd(); };
+  }
+});
+
+// ============================================================
+// FILE UPLOAD
+// ============================================================
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+const fileList = document.getElementById('fileList');
+let uploadedFiles = [];
+
+dropZone.addEventListener('click', () => fileInput.click());
+
+dropZone.addEventListener('dragover', e => {
+  e.preventDefault();
+  dropZone.classList.add('drag-over');
+});
+
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('drag-over');
+  handleFiles(e.dataTransfer.files);
+});
+
+fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+
+function handleFiles(files) {
+  Array.from(files).forEach(f => {
+    if (f.size > 50 * 1024 * 1024) {
+      showToast(`⚠️ ${f.name} ใหญ่เกิน 50MB`, 'error'); return;
+    }
+    uploadedFiles.push(f);
+    renderFileItem(f);
+  });
+}
+
+function renderFileItem(file) {
+  const size = (file.size / 1024 / 1024).toFixed(2);
+  const item = document.createElement('div');
+  item.className = 'file-item';
+  item.dataset.name = file.name;
+  item.innerHTML = `<span>📄 ${file.name} <small style="color:#777">(${size} MB)</small></span>
+    <button type="button" class="file-remove" title="ลบ">✕</button>`;
+  item.querySelector('.file-remove').addEventListener('click', () => {
+    uploadedFiles = uploadedFiles.filter(f => f.name !== file.name);
+    item.remove();
+  });
+  fileList.appendChild(item);
+}
+
+// ============================================================
+// FORM SUBMIT
+// ============================================================
+document.getElementById('briefingForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const project = document.getElementById('project').value.trim();
+  const brand = document.getElementById('brand').value.trim();
+  const contactName = document.getElementById('contactName').value.trim();
+  if (!project || !brand || !contactName) {
+    showToast('⚠️ กรุณากรอก Project, Brand และชื่อผู้ติดต่อ', 'error');
+    return;
+  }
+  showToast('✅ ส่งแบบฟอร์มสำเร็จ! ขอบคุณสำหรับข้อมูล', 'success');
+  setTimeout(() => {
+    // In a real scenario, you would send data to a server here
+    console.log('Form submitted', getFormData());
+  }, 500);
+});
+
+function getFormData() {
+  const platforms = [...document.querySelectorAll('input[name="platform"]:checked')].map(c => c.value);
+  return {
+    project: document.getElementById('project').value,
+    brand: document.getElementById('brand').value,
+    background: document.getElementById('background').value,
+    requirement: document.getElementById('requirement').value,
+    objective: document.getElementById('objective').value,
+    target: document.getElementById('target').value,
+    details: document.getElementById('details').value,
+    activity: document.getElementById('activity').value,
+    platforms,
+    platformOther: document.getElementById('platformOther').value,
+    member: document.getElementById('member').value,
+    promotion: document.getElementById('promotion').value,
+    timing: document.getElementById('timing').value,
+    contactName: document.getElementById('contactName').value,
+    contactPhone: document.getElementById('contactPhone').value,
+    contactEmail: document.getElementById('contactEmail').value,
+    contactLine: document.getElementById('contactLine').value,
+    files: uploadedFiles.map(f => f.name),
+  };
+}
+
+// Check browser support on load
+window.addEventListener('load', () => {
+  if (!SpeechRecognition) {
+    document.querySelector('.voice-banner').style.background = 'rgba(231,76,60,0.1)';
+    document.querySelector('.voice-banner').style.borderColor = 'rgba(231,76,60,0.3)';
+    document.querySelector('.voice-banner span:last-child').textContent =
+      '⚠️ เบราว์เซอร์นี้ไม่รองรับการรับเสียง — กรุณาใช้ Google Chrome เพื่อใช้งานฟีเจอร์นี้';
+  }
+});
+</script>
+</body>
+</html>

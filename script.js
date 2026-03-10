@@ -2,7 +2,7 @@
 // CONFIGURATION
 // ============================================================
 // ใส่ Web App URL ที่ได้จากการ Deploy Google Apps Script ตรงนี้
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzC4EKjKIfYidnp4WYRrAYeqGiAskiux01huNnCnlAMNAP9y950rbdZoHWUgiOlWPqf/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyRTAbZERV_NhXlDrLxejpoZYQB7jeFkkz26lYYZ6ShCErzTlhtPpk4fEl5iQ4NTDZn/exec";
 
 // ============================================================
 // VOICE INPUT ENGINE
@@ -224,18 +224,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            showToast('⏳ กำลังบันทึกข้อมูล...', '');
+            showToast('⏳ กำลังอัปโหลดไฟล์และบันทึกข้อมูล... (อาจใช้เวลาสักครู่)', '');
 
             try {
+                const formData = await getFormDataAsync();
+
+                // 🔴 เปลี่ยนวิธีส่งข้อมูลจาก application/json เป็น text/plain 
+                // เพื่อให้ทะลุข้อห้ามการส่งข้ามโดเมนของระบบ Google
                 const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     cache: 'no-cache',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(getFormData())
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(formData)
                 });
 
-                showToast('✅ บันทึกข้อมูลเรียบร้อยแล้ว!', 'success');
+                showToast('✅ บันทึกข้อมูลและแนบไฟล์เรียบร้อยแล้ว!', 'success');
                 briefingForm.reset();
                 uploadedFiles = [];
                 if (fileList) fileList.innerHTML = '';
@@ -247,8 +251,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function getFormData() {
+    async function getFormDataAsync() {
         const platforms = [...document.querySelectorAll('input[name="platform"]:checked')].map(c => c.value);
+
+        const filesData = await Promise.all(uploadedFiles.map(file => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    resolve({
+                        name: file.name,
+                        mimeType: file.type || 'application/octet-stream',
+                        base64: reader.result.split(',')[1]
+                    });
+                };
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
+        }));
+
         return {
             project: document.getElementById('project').value,
             brand: document.getElementById('brand').value,
@@ -267,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
             contactPhone: document.getElementById('contactPhone').value,
             contactEmail: document.getElementById('contactEmail').value,
             contactLine: document.getElementById('contactLine').value,
-            files: uploadedFiles.map(f => f.name),
+            files: filesData,
         };
     }
 

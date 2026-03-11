@@ -58,13 +58,9 @@ function updateStepper() {
 
 function validateStep(step) {
     if (step === 1) {
-        const project = document.getElementById('project').value.trim();
-        const brand = document.getElementById('brand').value.trim();
-        if (!project || !brand) {
-            showToast('⚠️ กรุณากรอก Project และ Brand', 'error');
-            return false;
-        }
+        return true;
     }
+
     // Add more validation if needed
     return true;
 }
@@ -190,6 +186,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Member Choice Toggle
+    const memberChoices = document.querySelectorAll('input[name="memberChoice"]');
+    const memberDetailContainer = document.getElementById('memberDetailContainer');
+    const memberNoneContainer = document.getElementById('memberNoneContainer');
+    memberChoices.forEach(choice => {
+        choice.addEventListener('change', () => {
+            if (memberDetailContainer && memberNoneContainer) {
+                if (choice.value === 'has') {
+                    memberDetailContainer.style.display = 'block';
+                    memberNoneContainer.style.display = 'none';
+                } else {
+                    memberDetailContainer.style.display = 'none';
+                    memberNoneContainer.style.display = 'block';
+                }
+            }
+        });
+    });
+
     // Global mic logic
     let lastFocusedField = null;
     document.querySelectorAll('input[type="text"], input[type="tel"], input[type="email"], textarea').forEach(el => {
@@ -276,14 +290,10 @@ document.addEventListener('DOMContentLoaded', () => {
         briefingForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const project = document.getElementById('project').value.trim();
             const brand = document.getElementById('brand').value.trim();
             const contactName = document.getElementById('contactName').value.trim();
 
-            if (!project || !brand || !contactName) {
-                showToast('⚠️ กรุณากรอก Project, Brand และชื่อผู้ติดต่อ', 'error');
-                return;
-            }
+
 
             if (SCRIPT_URL.includes("YOUR_APPS_SCRIPT")) {
                 showToast('⚠️ ยังไม่ได้ตั้งค่า URL ของ Apps Script', 'error');
@@ -361,9 +371,11 @@ document.addEventListener('DOMContentLoaded', () => {
             activity: document.getElementById('activity').value,
             platforms,
             platformOther: document.getElementById('platformOther').value,
-            member: document.getElementById('member').value,
+            member: document.querySelector('input[name="memberChoice"]:checked').value === 'has' 
+                ? `มี: ${document.getElementById('memberDetail').value}` 
+                : `ไม่มี (สร้างระบบให้: ${document.querySelector('input[name="memberCreate"]:checked').value === 'yes' ? 'ต้องการ' : 'ไม่ต้องการ'})`,
             promotion: document.getElementById('promotion').value,
-            timing: document.getElementById('timing').value,
+            timing: `${document.getElementById('timingStart').value} ถึง ${document.getElementById('timingEnd').value}`,
             contactName: document.getElementById('contactName').value,
             contactPhone: document.getElementById('contactPhone').value,
             contactEmail: document.getElementById('contactEmail').value,

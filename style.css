@@ -105,6 +105,30 @@ body {
   gap: 8px;
 }
 
+.timing-range {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.range-separator {
+  color: #f0c040;
+  font-weight: 700;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .timing-range {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .range-separator {
+    margin: 4px 0;
+  }
+}
+
 /* Inputs, Textarea, Select */
 input[type="text"],
 input[type="tel"],

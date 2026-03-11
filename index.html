@@ -42,12 +42,12 @@
       <!-- Step 1: Project Info -->
       <div class="form-step active" id="step-1">
         <div class="card">
-          <div class="card-title">🏷️ ข้อมูลโปรเจกต์</div>
+          <div class="card-title">🏷️ ข้อมูลลูกค้า</div>
 
           <div class="field-group">
-            <label>Project <span class="required">*</span></label>
+            <label>Client</label>
             <div class="input-wrap">
-              <input type="text" id="project" name="project" placeholder="ชื่อโปรเจกต์" />
+              <input type="text" id="project" name="project" placeholder="ชื่อลูกค้า" />
               <button type="button" class="mic-btn" data-target="project" title="พูดกรอกข้อมูล">🎤</button>
             </div>
             <div class="status-chip" id="status-project">
@@ -56,9 +56,9 @@
           </div>
 
           <div class="field-group">
-            <label>Brand <span class="required">*</span></label>
+            <label>Project</label>
             <div class="input-wrap">
-              <input type="text" id="brand" name="brand" placeholder="ชื่อแบรนด์" />
+              <input type="text" id="brand" name="brand" placeholder="ชื่อโปรเจกต์" />
               <button type="button" class="mic-btn" data-target="brand" title="พูดกรอกข้อมูล">🎤</button>
             </div>
             <div class="status-chip" id="status-brand">
@@ -69,7 +69,7 @@
           <div class="field-group">
             <label>Background</label>
             <div class="input-wrap">
-              <textarea id="background" name="background" placeholder="ข้อมูลพื้นหลังของโปรเจกต์ / แบรนด์"></textarea>
+              <textarea id="background" name="background" placeholder="ข้อมูลพื้นหลังของลูกค้า/โปรเจกต์"></textarea>
               <button type="button" class="mic-btn textarea-mic" data-target="background"
                 title="พูดกรอกข้อมูล">🎤</button>
             </div>
@@ -215,12 +215,37 @@
 
           <div class="field-group">
             <label>Member (ระบบสมาชิก)</label>
-            <div class="input-wrap">
-              <input type="text" id="member" name="member" placeholder="เช่น Line OA, App, etc." />
-              <button type="button" class="mic-btn" data-target="member" title="พูดกรอกข้อมูล">🎤</button>
+            <div class="checkbox-group" style="margin-bottom: 12px;">
+              <label class="checkbox-label">
+                <input type="radio" name="memberChoice" value="none" checked /> ไม่มี
+              </label>
+              <label class="checkbox-label">
+                <input type="radio" name="memberChoice" value="has" /> มี
+              </label>
             </div>
-            <div class="status-chip" id="status-member">
-              <div class="dot"></div> กำลังฟัง...
+
+            <div id="memberDetailContainer" class="platform-item" style="display: none;">
+              <div class="input-wrap">
+                <textarea id="memberDetail" name="memberDetail"
+                  placeholder="ระบุรายละเอียดระบบสมาชิก (เช่น Line OA, App, etc.)"></textarea>
+                <button type="button" class="mic-btn textarea-mic" data-target="memberDetail"
+                  title="พูดกรอกข้อมูล">🎤</button>
+              </div>
+              <div class="status-chip" id="status-memberDetail">
+                <div class="dot"></div> กำลังฟัง...
+              </div>
+            </div>
+
+            <div id="memberNoneContainer" class="platform-item" style="display: block;">
+              <p style="font-size: 0.85rem; color: #ccc; margin-bottom: 8px;">ต้องการให้จัดทำระบบสมาชิกให้หรือไม่?</p>
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input type="radio" name="memberCreate" value="yes" /> ต้องการ
+                </label>
+                <label class="checkbox-label">
+                  <input type="radio" name="memberCreate" value="no" checked /> ไม่ต้องการ
+                </label>
+              </div>
             </div>
           </div>
         </div>
@@ -249,12 +274,14 @@
 
           <div class="field-group">
             <label>Tentative Timing (กำหนดการเบื้องต้น)</label>
-            <div class="input-wrap">
-              <input type="text" id="timing" name="timing" placeholder="เช่น เมษายน 2568 หรือ Q2 2025" />
-              <button type="button" class="mic-btn" data-target="timing" title="พูดกรอกข้อมูล">🎤</button>
-            </div>
-            <div class="status-chip" id="status-timing">
-              <div class="dot"></div> กำลังฟัง...
+            <div class="timing-range">
+              <div class="input-wrap">
+                <input type="month" id="timingStart" name="timingStart" />
+              </div>
+              <span class="range-separator">ถึง</span>
+              <div class="input-wrap">
+                <input type="month" id="timingEnd" name="timingEnd" />
+              </div>
             </div>
           </div>
         </div>
@@ -292,7 +319,7 @@
           <div class="card-title">📞 ข้อมูลติดต่อ</div>
 
           <div class="field-group">
-            <label>ชื่อผู้ติดต่อ <span class="required">*</span></label>
+            <label>ชื่อผู้ติดต่อ</label>
             <div class="input-wrap">
               <input type="text" id="contactName" name="contactName" placeholder="ชื่อ - นามสกุล" />
               <button type="button" class="mic-btn" data-target="contactName" title="พูดกรอกข้อมูล">🎤</button>

@@ -22,244 +22,323 @@
       <span>รองรับการป้อนข้อมูลด้วยเสียง — กดปุ่มไมค์ข้างช่องแล้วพูดเป็นภาษาไทยหรืออังกฤษได้เลย</span>
     </div>
 
+    <!-- Step Progress Indicator -->
+    <div class="stepper">
+      <div class="step-indicator active" data-step="1">1</div>
+      <div class="step-line"></div>
+      <div class="step-indicator" data-step="2">2</div>
+      <div class="step-line"></div>
+      <div class="step-indicator" data-step="3">3</div>
+      <div class="step-line"></div>
+      <div class="step-indicator" data-step="4">4</div>
+      <div class="step-line"></div>
+      <div class="step-indicator" data-step="5">5</div>
+      <div class="step-line"></div>
+      <div class="step-indicator" data-step="6">6</div>
+    </div>
+
     <form id="briefingForm" novalidate>
 
-      <!-- Section 1: Project Info -->
-      <div class="card">
-        <div class="card-title">🏷️ ข้อมูลโปรเจกต์</div>
+      <!-- Step 1: Project Info -->
+      <div class="form-step active" id="step-1">
+        <div class="card">
+          <div class="card-title">🏷️ ข้อมูลโปรเจกต์</div>
 
-        <div class="field-group">
-          <label>Project <span class="required">*</span></label>
-          <div class="input-wrap">
-            <input type="text" id="project" name="project" placeholder="ชื่อโปรเจกต์" />
-            <button type="button" class="mic-btn" data-target="project" title="พูดกรอกข้อมูล">🎤</button>
+          <div class="field-group">
+            <label>Project <span class="required">*</span></label>
+            <div class="input-wrap">
+              <input type="text" id="project" name="project" placeholder="ชื่อโปรเจกต์" />
+              <button type="button" class="mic-btn" data-target="project" title="พูดกรอกข้อมูล">🎤</button>
+            </div>
+            <div class="status-chip" id="status-project">
+              <div class="dot"></div> กำลังฟัง...
+            </div>
           </div>
-          <div class="status-chip" id="status-project">
-            <div class="dot"></div> กำลังฟัง...
+
+          <div class="field-group">
+            <label>Brand <span class="required">*</span></label>
+            <div class="input-wrap">
+              <input type="text" id="brand" name="brand" placeholder="ชื่อแบรนด์" />
+              <button type="button" class="mic-btn" data-target="brand" title="พูดกรอกข้อมูล">🎤</button>
+            </div>
+            <div class="status-chip" id="status-brand">
+              <div class="dot"></div> กำลังฟัง...
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Background</label>
+            <div class="input-wrap">
+              <textarea id="background" name="background" placeholder="ข้อมูลพื้นหลังของโปรเจกต์ / แบรนด์"></textarea>
+              <button type="button" class="mic-btn textarea-mic" data-target="background"
+                title="พูดกรอกข้อมูล">🎤</button>
+            </div>
+            <div class="status-chip" id="status-background">
+              <div class="dot"></div> กำลังฟัง...
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Requirement (ความต้องการหลัก)</label>
+            <div class="input-wrap">
+              <input type="text" id="requirement" name="requirement" placeholder="เช่น งานครบรอบ 80 ปี" />
+              <button type="button" class="mic-btn" data-target="requirement" title="พูดกรอกข้อมูล">🎤</button>
+            </div>
+            <div class="status-chip" id="status-requirement">
+              <div class="dot"></div> กำลังฟัง...
+            </div>
           </div>
         </div>
-
-        <div class="field-group">
-          <label>Brand <span class="required">*</span></label>
-          <div class="input-wrap">
-            <input type="text" id="brand" name="brand" placeholder="ชื่อแบรนด์" />
-            <button type="button" class="mic-btn" data-target="brand" title="พูดกรอกข้อมูล">🎤</button>
-          </div>
-          <div class="status-chip" id="status-brand">
-            <div class="dot"></div> กำลังฟัง...
-          </div>
-        </div>
-
-        <div class="field-group">
-          <label>Background</label>
-          <div class="input-wrap">
-            <textarea id="background" name="background" placeholder="ข้อมูลพื้นหลังของโปรเจกต์ / แบรนด์"></textarea>
-            <button type="button" class="mic-btn textarea-mic" data-target="background"
-              title="พูดกรอกข้อมูล">🎤</button>
-          </div>
-          <div class="status-chip" id="status-background">
-            <div class="dot"></div> กำลังฟัง...
-          </div>
-        </div>
-
-        <div class="field-group">
-          <label>Requirement (ความต้องการหลัก)</label>
-          <div class="input-wrap">
-            <input type="text" id="requirement" name="requirement" placeholder="เช่น งานครบรอบ 80 ปี" />
-            <button type="button" class="mic-btn" data-target="requirement" title="พูดกรอกข้อมูล">🎤</button>
-          </div>
-          <div class="status-chip" id="status-requirement">
-            <div class="dot"></div> กำลังฟัง...
-          </div>
-        </div>
-      </div>
-
-      <!-- Section 2: Strategy -->
-      <div class="card">
-        <div class="card-title">🎯 เป้าหมายและกลุ่มเป้าหมาย</div>
-
-        <div class="field-group">
-          <label>Objective (วัตถุประสงค์)</label>
-          <div class="input-wrap">
-            <textarea id="objective" name="objective"
-              placeholder="เช่น สร้าง PR / Awareness / กระตุ้นยอดขาย"></textarea>
-            <button type="button" class="mic-btn textarea-mic" data-target="objective" title="พูดกรอกข้อมูล">🎤</button>
-          </div>
-          <div class="status-chip" id="status-objective">
-            <div class="dot"></div> กำลังฟัง...
-          </div>
-        </div>
-
-        <div class="field-group">
-          <label>Target (กลุ่มเป้าหมาย)</label>
-          <div class="input-wrap">
-            <textarea id="target" name="target" placeholder="เช่น นักท่องเที่ยว / คนในท้องถิ่น / นักสะสม"></textarea>
-            <button type="button" class="mic-btn textarea-mic" data-target="target" title="พูดกรอกข้อมูล">🎤</button>
-          </div>
-          <div class="status-chip" id="status-target">
-            <div class="dot"></div> กำลังฟัง...
-          </div>
-        </div>
-
-        <div class="field-group">
-          <label>Details (รายละเอียดเพิ่มเติม)</label>
-          <div class="input-wrap">
-            <textarea id="details" name="details" placeholder="รายละเอียดของงานหรือแคมเปญ"></textarea>
-            <button type="button" class="mic-btn textarea-mic" data-target="details" title="พูดกรอกข้อมูล">🎤</button>
-          </div>
-          <div class="status-chip" id="status-details">
-            <div class="dot"></div> กำลังฟัง...
-          </div>
+        <div class="step-footer">
+          <button type="button" class="btn-nav btn-next" onclick="nextStep(1)">ถัดไป ➔</button>
         </div>
       </div>
 
-      <!-- Section 3: Activity & Platform -->
-      <div class="card">
-        <div class="card-title">📱 กิจกรรมและแพลตฟอร์ม</div>
+      <!-- Step 2: Strategy -->
+      <div class="form-step" id="step-2">
+        <div class="card">
+          <div class="card-title">🎯 เป้าหมายและกลุ่มเป้าหมาย</div>
 
-        <div class="field-group">
-          <label>Activity (กิจกรรม)</label>
-          <div class="input-wrap">
-            <textarea id="activity" name="activity" placeholder="รายละเอียดกิจกรรมที่ต้องการ"></textarea>
-            <button type="button" class="mic-btn textarea-mic" data-target="activity" title="พูดกรอกข้อมูล">🎤</button>
+          <div class="field-group">
+            <label>Objective (วัตถุประสงค์)</label>
+            <div class="input-wrap">
+              <textarea id="objective" name="objective"
+                placeholder="เช่น สร้าง PR / Awareness / กระตุ้นยอดขาย"></textarea>
+              <button type="button" class="mic-btn textarea-mic" data-target="objective"
+                title="พูดกรอกข้อมูล">🎤</button>
+            </div>
+            <div class="status-chip" id="status-objective">
+              <div class="dot"></div> กำลังฟัง...
+            </div>
           </div>
-          <div class="status-chip" id="status-activity">
-            <div class="dot"></div> กำลังฟัง...
+
+          <div class="field-group">
+            <label>Target (กลุ่มเป้าหมาย)</label>
+            <div class="input-wrap">
+              <textarea id="target" name="target" placeholder="เช่น นักท่องเที่ยว / คนในท้องถิ่น / นักสะสม"></textarea>
+              <button type="button" class="mic-btn textarea-mic" data-target="target" title="พูดกรอกข้อมูล">🎤</button>
+            </div>
+            <div class="status-chip" id="status-target">
+              <div class="dot"></div> กำลังฟัง...
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Details (รายละเอียดเพิ่มเติม)</label>
+            <div class="input-wrap">
+              <textarea id="details" name="details" placeholder="รายละเอียดของงานหรือแคมเปญ"></textarea>
+              <button type="button" class="mic-btn textarea-mic" data-target="details" title="พูดกรอกข้อมูล">🎤</button>
+            </div>
+            <div class="status-chip" id="status-details">
+              <div class="dot"></div> กำลังฟัง...
+            </div>
           </div>
         </div>
-
-        <div class="field-group">
-          <label>Platform (แพลตฟอร์ม)</label>
-          <div class="checkbox-group">
-            <label class="checkbox-label"><input type="checkbox" name="platform" value="Facebook" /> Facebook</label>
-            <label class="checkbox-label"><input type="checkbox" name="platform" value="Instagram" /> Instagram</label>
-            <label class="checkbox-label"><input type="checkbox" name="platform" value="TikTok" /> TikTok</label>
-            <label class="checkbox-label"><input type="checkbox" name="platform" value="YouTube" /> YouTube</label>
-            <label class="checkbox-label"><input type="checkbox" name="platform" value="Line OA" checked /> Line
-              OA</label>
-            <label class="checkbox-label"><input type="checkbox" name="platform" value="Twitter/X" /> Twitter/X</label>
-            <label class="checkbox-label"><input type="checkbox" name="platform" value="Website" /> Website</label>
-          </div>
-        </div>
-
-        <div class="field-group">
-          <label>Platform อื่นๆ</label>
-          <div class="input-wrap">
-            <input type="text" id="platformOther" name="platformOther" placeholder="ระบุแพลตฟอร์มอื่น..." />
-            <button type="button" class="mic-btn" data-target="platformOther" title="พูดกรอกข้อมูล">🎤</button>
-          </div>
-          <div class="status-chip" id="status-platformOther">
-            <div class="dot"></div> กำลังฟัง...
-          </div>
-        </div>
-
-        <div class="field-group">
-          <label>Member (ระบบสมาชิก)</label>
-          <div class="input-wrap">
-            <input type="text" id="member" name="member" placeholder="เช่น Line OA, App, etc." />
-            <button type="button" class="mic-btn" data-target="member" title="พูดกรอกข้อมูล">🎤</button>
-          </div>
-          <div class="status-chip" id="status-member">
-            <div class="dot"></div> กำลังฟัง...
-          </div>
+        <div class="step-footer">
+          <button type="button" class="btn-nav btn-prev" onclick="prevStep(2)">⬅ ย้อนกลับ</button>
+          <button type="button" class="btn-nav btn-next" onclick="nextStep(2)">ถัดไป ➔</button>
         </div>
       </div>
 
-      <!-- Section 4: Promotion & Timing -->
-      <div class="card">
-        <div class="card-title">🎁 โปรโมชันและกำหนดการ</div>
+      <!-- Step 3: Activity & Platform -->
+      <div class="form-step" id="step-3">
+        <div class="card">
+          <div class="card-title">📱 กิจกรรมและแพลตฟอร์ม</div>
 
-        <div class="field-group">
-          <label>Promotion / Privilege</label>
-          <div class="input-wrap">
-            <textarea id="promotion" name="promotion" placeholder="รายละเอียดโปรโมชัน หรือสิทธิพิเศษ"></textarea>
-            <button type="button" class="mic-btn textarea-mic" data-target="promotion" title="พูดกรอกข้อมูล">🎤</button>
+          <div class="field-group">
+            <label>Activity (กิจกรรม)</label>
+            <div class="input-wrap">
+              <textarea id="activity" name="activity" placeholder="รายละเอียดกิจกรรมที่ต้องการ"></textarea>
+              <button type="button" class="mic-btn textarea-mic" data-target="activity"
+                title="พูดกรอกข้อมูล">🎤</button>
+            </div>
+            <div class="status-chip" id="status-activity">
+              <div class="dot"></div> กำลังฟัง...
+            </div>
           </div>
-          <div class="status-chip" id="status-promotion">
-            <div class="dot"></div> กำลังฟัง...
+
+          <div class="field-group">
+            <label>Platform (แพลตฟอร์ม)</label>
+            <div class="checkbox-group">
+              <div class="platform-item">
+                <label class="checkbox-label"><input type="checkbox" name="platform" value="Facebook" />
+                  Facebook</label>
+                <textarea class="platform-detail" name="platform_detail_Facebook"
+                  placeholder="รายละเอียด Facebook..."></textarea>
+              </div>
+              <div class="platform-item">
+                <label class="checkbox-label"><input type="checkbox" name="platform" value="Instagram" />
+                  Instagram</label>
+                <textarea class="platform-detail" name="platform_detail_Instagram"
+                  placeholder="รายละเอียด Instagram..."></textarea>
+              </div>
+              <div class="platform-item">
+                <label class="checkbox-label"><input type="checkbox" name="platform" value="TikTok" /> TikTok</label>
+                <textarea class="platform-detail" name="platform_detail_TikTok"
+                  placeholder="รายละเอียด TikTok..."></textarea>
+              </div>
+              <div class="platform-item">
+                <label class="checkbox-label"><input type="checkbox" name="platform" value="YouTube" /> YouTube</label>
+                <textarea class="platform-detail" name="platform_detail_YouTube"
+                  placeholder="รายละเอียด YouTube..."></textarea>
+              </div>
+              <div class="platform-item">
+                <label class="checkbox-label"><input type="checkbox" name="platform" value="Line OA" checked /> Line
+                  OA</label>
+                <textarea class="platform-detail active" name="platform_detail_Line OA"
+                  placeholder="รายละเอียด Line OA..."></textarea>
+              </div>
+              <div class="platform-item">
+                <label class="checkbox-label"><input type="checkbox" name="platform" value="Twitter/X" />
+                  Twitter/X</label>
+                <textarea class="platform-detail" name="platform_detail_Twitter/X"
+                  placeholder="รายละเอียด Twitter/X..."></textarea>
+              </div>
+              <div class="platform-item">
+                <label class="checkbox-label"><input type="checkbox" name="platform" value="Website" /> Website</label>
+                <textarea class="platform-detail" name="platform_detail_Website"
+                  placeholder="รายละเอียด Website..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Platform อื่นๆ</label>
+            <div class="input-wrap">
+              <input type="text" id="platformOther" name="platformOther" placeholder="ระบุแพลตฟอร์มอื่น..." />
+              <button type="button" class="mic-btn" data-target="platformOther" title="พูดกรอกข้อมูล">🎤</button>
+            </div>
+            <div class="status-chip" id="status-platformOther">
+              <div class="dot"></div> กำลังฟัง...
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Member (ระบบสมาชิก)</label>
+            <div class="input-wrap">
+              <input type="text" id="member" name="member" placeholder="เช่น Line OA, App, etc." />
+              <button type="button" class="mic-btn" data-target="member" title="พูดกรอกข้อมูล">🎤</button>
+            </div>
+            <div class="status-chip" id="status-member">
+              <div class="dot"></div> กำลังฟัง...
+            </div>
           </div>
         </div>
-
-        <div class="field-group">
-          <label>Tentative Timing (กำหนดการเบื้องต้น)</label>
-          <div class="input-wrap">
-            <input type="text" id="timing" name="timing" placeholder="เช่น เมษายน 2568 หรือ Q2 2025" />
-            <button type="button" class="mic-btn" data-target="timing" title="พูดกรอกข้อมูล">🎤</button>
-          </div>
-          <div class="status-chip" id="status-timing">
-            <div class="dot"></div> กำลังฟัง...
-          </div>
-        </div>
-      </div>
-
-      <!-- Section 5: File Upload -->
-      <div class="card">
-        <div class="card-title">📎 แนบไฟล์</div>
-        <p style="font-size:0.85rem; color:#aaa; margin-bottom:16px;">Logo (.AI / .PNG) / รูปภาพ / VDO footage</p>
-
-        <div class="file-upload-area" id="dropZone">
-          <div class="icon">📁</div>
-          <p>ลากไฟล์มาวางที่นี่ หรือ <strong style="color:#f0c040">คลิกเพื่อเลือกไฟล์</strong></p>
-          <small>รองรับ: .ai, .png, .jpg, .gif, .mp4, .mov, .pdf (สูงสุด 50MB ต่อไฟล์)</small>
-          <input type="file" id="fileInput" name="files" multiple
-            accept=".ai,.png,.jpg,.jpeg,.gif,.mp4,.mov,.pdf,.svg" />
-        </div>
-
-        <div class="file-list" id="fileList"></div>
-      </div>
-
-      <!-- Section 6: Contact -->
-      <div class="card">
-        <div class="card-title">📞 ข้อมูลติดต่อ</div>
-
-        <div class="field-group">
-          <label>ชื่อผู้ติดต่อ <span class="required">*</span></label>
-          <div class="input-wrap">
-            <input type="text" id="contactName" name="contactName" placeholder="ชื่อ - นามสกุล" />
-            <button type="button" class="mic-btn" data-target="contactName" title="พูดกรอกข้อมูล">🎤</button>
-          </div>
-          <div class="status-chip" id="status-contactName">
-            <div class="dot"></div> กำลังฟัง...
-          </div>
-        </div>
-
-        <div class="field-group">
-          <label>เบอร์โทรศัพท์</label>
-          <div class="input-wrap">
-            <input type="tel" id="contactPhone" name="contactPhone" placeholder="08X-XXX-XXXX" />
-            <button type="button" class="mic-btn" data-target="contactPhone" title="พูดกรอกข้อมูล">🎤</button>
-          </div>
-          <div class="status-chip" id="status-contactPhone">
-            <div class="dot"></div> กำลังฟัง...
-          </div>
-        </div>
-
-        <div class="field-group">
-          <label>อีเมล</label>
-          <div class="input-wrap">
-            <input type="email" id="contactEmail" name="contactEmail" placeholder="email@example.com" />
-            <button type="button" class="mic-btn" data-target="contactEmail" title="พูดกรอกข้อมูล">🎤</button>
-          </div>
-          <div class="status-chip" id="status-contactEmail">
-            <div class="dot"></div> กำลังฟัง...
-          </div>
-        </div>
-
-        <div class="field-group">
-          <label>Line ID / Social</label>
-          <div class="input-wrap">
-            <input type="text" id="contactLine" name="contactLine" placeholder="Line ID หรือ social media" />
-            <button type="button" class="mic-btn" data-target="contactLine" title="พูดกรอกข้อมูล">🎤</button>
-          </div>
-          <div class="status-chip" id="status-contactLine">
-            <div class="dot"></div> กำลังฟัง...
-          </div>
+        <div class="step-footer">
+          <button type="button" class="btn-nav btn-prev" onclick="prevStep(3)">⬅ ย้อนกลับ</button>
+          <button type="button" class="btn-nav btn-next" onclick="nextStep(3)">ถัดไป ➔</button>
         </div>
       </div>
 
-      <!-- Submit -->
-      <div class="submit-section">
-        <button type="submit" class="btn-submit">✅ ส่งแบบฟอร์ม</button>
+      <!-- Step 4: Promotion & Timing -->
+      <div class="form-step" id="step-4">
+        <div class="card">
+          <div class="card-title">🎁 โปรโมชันและกำหนดการ</div>
+
+          <div class="field-group">
+            <label>Promotion / Privilege</label>
+            <div class="input-wrap">
+              <textarea id="promotion" name="promotion" placeholder="รายละเอียดโปรโมชัน หรือสิทธิพิเศษ"></textarea>
+              <button type="button" class="mic-btn textarea-mic" data-target="promotion"
+                title="พูดกรอกข้อมูล">🎤</button>
+            </div>
+            <div class="status-chip" id="status-promotion">
+              <div class="dot"></div> กำลังฟัง...
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Tentative Timing (กำหนดการเบื้องต้น)</label>
+            <div class="input-wrap">
+              <input type="text" id="timing" name="timing" placeholder="เช่น เมษายน 2568 หรือ Q2 2025" />
+              <button type="button" class="mic-btn" data-target="timing" title="พูดกรอกข้อมูล">🎤</button>
+            </div>
+            <div class="status-chip" id="status-timing">
+              <div class="dot"></div> กำลังฟัง...
+            </div>
+          </div>
+        </div>
+        <div class="step-footer">
+          <button type="button" class="btn-nav btn-prev" onclick="prevStep(4)">⬅ ย้อนกลับ</button>
+          <button type="button" class="btn-nav btn-next" onclick="nextStep(4)">ถัดไป ➔</button>
+        </div>
+      </div>
+
+      <!-- Step 5: File Upload -->
+      <div class="form-step" id="step-5">
+        <div class="card">
+          <div class="card-title">📎 แนบไฟล์</div>
+          <p style="font-size:0.85rem; color:#aaa; margin-bottom:16px;">Logo (.AI / .PNG) / รูปภาพ / VDO footage</p>
+
+          <div class="file-upload-area" id="dropZone">
+            <div class="icon">📁</div>
+            <p>ลากไฟล์มาวางที่นี่ หรือ <strong style="color:#f0c040">คลิกเพื่อเลือกไฟล์</strong></p>
+            <small>รองรับ: .ai, .png, .jpg, .jpeg, .gif, .mp4, .mov, .pdf (สูงสุด 50MB ต่อไฟล์)</small>
+            <input type="file" id="fileInput" name="files" multiple
+              accept=".ai,.png,.jpg,.jpeg,.gif,.mp4,.mov,.pdf,.svg" />
+          </div>
+
+          <div class="file-list" id="fileList"></div>
+        </div>
+        <div class="step-footer">
+          <button type="button" class="btn-nav btn-prev" onclick="prevStep(5)">⬅ ย้อนกลับ</button>
+          <button type="button" class="btn-nav btn-next" onclick="nextStep(5)">ถัดไป ➔</button>
+        </div>
+      </div>
+
+      <!-- Step 6: Contact -->
+      <div class="form-step" id="step-6">
+        <div class="card">
+          <div class="card-title">📞 ข้อมูลติดต่อ</div>
+
+          <div class="field-group">
+            <label>ชื่อผู้ติดต่อ <span class="required">*</span></label>
+            <div class="input-wrap">
+              <input type="text" id="contactName" name="contactName" placeholder="ชื่อ - นามสกุล" />
+              <button type="button" class="mic-btn" data-target="contactName" title="พูดกรอกข้อมูล">🎤</button>
+            </div>
+            <div class="status-chip" id="status-contactName">
+              <div class="dot"></div> กำลังฟัง...
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>เบอร์โทรศัพท์</label>
+            <div class="input-wrap">
+              <input type="tel" id="contactPhone" name="contactPhone" placeholder="08X-XXX-XXXX" />
+              <button type="button" class="mic-btn" data-target="contactPhone" title="พูดกรอกข้อมูล">🎤</button>
+            </div>
+            <div class="status-chip" id="status-contactPhone">
+              <div class="dot"></div> กำลังฟัง...
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>อีเมล</label>
+            <div class="input-wrap">
+              <input type="email" id="contactEmail" name="contactEmail" placeholder="email@example.com" />
+              <button type="button" class="mic-btn" data-target="contactEmail" title="พูดกรอกข้อมูล">🎤</button>
+            </div>
+            <div class="status-chip" id="status-contactEmail">
+              <div class="dot"></div> กำลังฟัง...
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Line ID / Social</label>
+            <div class="input-wrap">
+              <input type="text" id="contactLine" name="contactLine" placeholder="Line ID หรือ social media" />
+              <button type="button" class="mic-btn" data-target="contactLine" title="พูดกรอกข้อมูล">🎤</button>
+            </div>
+            <div class="status-chip" id="status-contactLine">
+              <div class="dot"></div> กำลังฟัง...
+            </div>
+          </div>
+        </div>
+        <div class="step-footer">
+          <button type="button" class="btn-nav btn-prev" onclick="prevStep(6)">⬅ ย้อนกลับ</button>
+          <button type="submit" class="btn-submit">✅ ส่งแบบฟอร์ม</button>
+        </div>
       </div>
 
     </form>

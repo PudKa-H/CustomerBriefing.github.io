@@ -13,6 +13,61 @@ let currentTarget = null;
 let isListening = false;
 let activeBtn = null;
 let uploadedFiles = [];
+let currentStep = 1;
+const totalSteps = 6;
+
+// ============================================================
+// MULTI-STEP NAVIGATION
+// ============================================================
+window.nextStep = function (step) {
+    if (!validateStep(step)) return;
+
+    if (currentStep < totalSteps) {
+        document.getElementById('step-' + currentStep).classList.remove('active');
+        currentStep++;
+        document.getElementById('step-' + currentStep).classList.add('active');
+        updateStepper();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+};
+
+window.prevStep = function (step) {
+    if (currentStep > 1) {
+        document.getElementById('step-' + currentStep).classList.remove('active');
+        currentStep--;
+        document.getElementById('step-' + currentStep).classList.add('active');
+        updateStepper();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+};
+
+function updateStepper() {
+    document.querySelectorAll('.step-indicator').forEach((el, idx) => {
+        const stepNum = idx + 1;
+        el.classList.remove('active', 'completed');
+        if (stepNum === currentStep) el.classList.add('active');
+        else if (stepNum < currentStep) el.classList.add('completed');
+    });
+
+    document.querySelectorAll('.step-line').forEach((el, idx) => {
+        const stepNum = idx + 1;
+        el.classList.remove('active');
+        if (stepNum < currentStep) el.classList.add('active');
+    });
+}
+
+function validateStep(step) {
+    if (step === 1) {
+        const project = document.getElementById('project').value.trim();
+        const brand = document.getElementById('brand').value.trim();
+        if (!project || !brand) {
+            showToast('⚠️ กรุณากรอก Project และ Brand', 'error');
+            return false;
+        }
+    }
+    // Add more validation if needed
+    return true;
+}
 
 function showToast(msg, type = '') {
     const t = document.getElementById('toast');
@@ -121,6 +176,17 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', () => {
             const target = btn.dataset.target;
             startRecognition(target, btn);
+        });
+    });
+
+    // Platform Detail Toggle
+    document.querySelectorAll('.platform-item input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            const detail = checkbox.closest('.platform-item').querySelector('.platform-detail');
+            if (detail) {
+                if (checkbox.checked) detail.classList.add('active');
+                else detail.classList.remove('active');
+            }
         });
     });
 
@@ -243,6 +309,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 briefingForm.reset();
                 uploadedFiles = [];
                 if (fileList) fileList.innerHTML = '';
+                
+                // Reset Multi-step
+                document.getElementById('step-' + currentStep).classList.remove('active');
+                currentStep = 1;
+                document.getElementById('step-1').classList.add('active');
+                updateStepper();
 
             } catch (error) {
                 console.error('Error!', error.message);
@@ -252,7 +324,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function getFormDataAsync() {
-        const platforms = [...document.querySelectorAll('input[name="platform"]:checked')].map(c => c.value);
+        // Collect platforms with their details
+        const platformItems = document.querySelectorAll('.platform-item');
+        const platforms = [];
+        platformItems.forEach(item => {
+            const checkbox = item.querySelector('input[name="platform"]');
+            if (checkbox && checkbox.checked) {
+                const detail = item.querySelector('.platform-detail')?.value || '';
+                platforms.push(`${checkbox.value}: ${detail}`);
+            }
+        });
 
         const filesData = await Promise.all(uploadedFiles.map(file => {
             return new Promise((resolve, reject) => {

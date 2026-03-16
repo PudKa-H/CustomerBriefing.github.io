@@ -3,6 +3,11 @@
 // ============================================================
 // ใส่ Web App URL ที่ได้จากการ Deploy Google Apps Script ตรงนี้
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyRTAbZERV_NhXlDrLxejpoZYQB7jeFkkz26lYYZ6ShCErzTlhtPpk4fEl5iQ4NTDZn/exec";
+const LIFF_ID = "2009416786-VFmrGJIF";
+
+let lineUserId = null;
+let lineUserName = null;
+let lineUserPicture = null;
 
 // ============================================================
 // VOICE INPUT ENGINE
@@ -138,6 +143,8 @@ function startRecognition(targetId, btn) {
         const el = document.getElementById(targetId);
         if (el && finalTranscript) {
             el.dataset.confirmed = el.value;
+            // Dispatch input event so localStorage auto-save can catch it
+            el.dispatchEvent(new Event('input', { bubbles: true }));
         }
         currentTarget = null;
         activeBtn = null;
@@ -166,7 +173,47 @@ function stopRecognition() {
 // ============================================================
 // INITIALIZATION
 // ============================================================
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Initialize LIFF
+    try {
+        await liff.init({ liffId: LIFF_ID });
+        if (!liff.isLoggedIn()) {
+            liff.login();
+            return;
+        }
+        const profile = await liff.getProfile();
+        lineUserId = profile.userId;
+        lineUserName = profile.displayName;
+        lineUserPicture = profile.pictureUrl;
+
+        // Update UI with profile
+        const userProfile = document.getElementById('userProfile');
+        const userImg = document.getElementById('userImg');
+        const userName = document.getElementById('userName');
+        if (userProfile && userImg && userName) {
+            userImg.src = lineUserPicture;
+            userName.textContent = lineUserName;
+            userProfile.style.display = 'flex';
+        }
+
+        // Load existing data from Google Sheets via Apps Script
+        await loadUserData();
+
+        // Hide overlay
+        const overlay = document.getElementById('liffLoading');
+        if (overlay) {
+            overlay.style.opacity = '0';
+            setTimeout(() => overlay.style.display = 'none', 500);
+        }
+
+    } catch (err) {
+        console.error('LIFF Error:', err);
+        showToast('❌ ไม่สามารถเชื่อมต่อกับ LINE ได้', 'error');
+        // Hide overlay even on error
+        const overlay = document.getElementById('liffLoading');
+        if (overlay) overlay.style.display = 'none';
+    }
+
     // Attach mic buttons
     document.querySelectorAll('.mic-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -284,6 +331,17 @@ document.addEventListener('DOMContentLoaded', () => {
         fileList.appendChild(item);
     }
 
+    // Contact Info Auto-save (LocalStorage)
+    const contactFields = ['contactName', 'contactPhone', 'contactEmail', 'contactLine'];
+    contactFields.forEach(field => {
+        const el = document.getElementById(field);
+        const saved = localStorage.getItem(field);
+        if (el) {
+            if (saved) el.value = saved;
+            el.addEventListener('input', () => localStorage.setItem(field, el.value));
+        }
+    });
+
     // Form Submit
     const briefingForm = document.getElementById('briefingForm');
     if (briefingForm) {
@@ -304,6 +362,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 const formData = await getFormDataAsync();
+                
+                // Debugging: แสดงข้อมูลที่กำลังจะส่งใน Console
+                console.log("📤 กำลังส่งข้อมูลไปยัง Google Sheets:", formData);
 
                 // 🔴 เปลี่ยนวิธีส่งข้อมูลจาก application/json เป็น text/plain 
                 // เพื่อให้ทะลุข้อห้ามการส่งข้ามโดเมนของระบบ Google
@@ -319,6 +380,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 briefingForm.reset();
                 uploadedFiles = [];
                 if (fileList) fileList.innerHTML = '';
+
+                // Clear LocalStorage after success
+                localStorage.removeItem('contactName');
+                localStorage.removeItem('contactPhone');
+                localStorage.removeItem('contactEmail');
+                localStorage.removeItem('contactLine');
                 
                 // Reset Multi-step
                 document.getElementById('step-' + currentStep).classList.remove('active');
@@ -361,6 +428,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }));
 
         return {
+            userId: lineUserId,
+            userName: lineUserName,
             project: document.getElementById('project').value,
             brand: document.getElementById('brand').value,
             background: document.getElementById('background').value,
@@ -397,3 +466,77 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+async function loadUserData() {
+    if (!lineUserId) return;
+    showToast('⌛ กำลังโหลดข้อมูลเดิมของคุณ...');
+
+    try {
+        const response = await fetch(`${SCRIPT_URL}?userId=${lineUserId}`);
+        const result = await response.json();
+
+        if (result.status === 'success' && result.data) {
+            const data = result.data;
+            // Pre-populate fields
+            if (data.project) document.getElementById('project').value = data.project;
+            if (data.brand) document.getElementById('brand').value = data.brand;
+            if (data.background) document.getElementById('background').value = data.background;
+            if (data.requirement) document.getElementById('requirement').value = data.requirement;
+            if (data.objective) document.getElementById('objective').value = data.objective;
+            if (data.target) document.getElementById('target').value = data.target;
+            if (data.details) document.getElementById('details').value = data.details;
+            if (data.activity) document.getElementById('activity').value = data.activity;
+            if (data.platformOther) document.getElementById('platformOther').value = data.platformOther;
+            
+            // Member handling
+            if (data.member) {
+                if (data.member.startsWith('มี:')) {
+                    document.querySelector('input[name="memberChoice"][value="has"]').checked = true;
+                    document.getElementById('memberDetailContainer').style.display = 'block';
+                    document.getElementById('memberNoneContainer').style.display = 'none';
+                    document.getElementById('memberDetail').value = data.member.replace('มี: ', '');
+                } else if (data.member.startsWith('ไม่มี')) {
+                    document.querySelector('input[name="memberChoice"][value="none"]').checked = true;
+                    document.getElementById('memberDetailContainer').style.display = 'none';
+                    document.getElementById('memberNoneContainer').style.display = 'block';
+                    const createMatch = data.member.match(/สร้างระบบให้: (ต้องการ|ไม่ต้องการ)/);
+                    if (createMatch) {
+                        const createVal = createMatch[1] === 'ต้องการ' ? 'yes' : 'no';
+                        document.querySelector(`input[name="memberCreate"][value="${createVal}"]`).checked = true;
+                    }
+                }
+            }
+
+            if (data.promotion) document.getElementById('promotion').value = data.promotion;
+            // Timing
+            if (data.timing) {
+                const parts = data.timing.split(' ถึง ');
+                if (parts.length === 2) {
+                    document.getElementById('timingStart').value = parts[0];
+                    document.getElementById('timingEnd').value = parts[1];
+                }
+            }
+            if (data.contactName) {
+                document.getElementById('contactName').value = data.contactName;
+                localStorage.setItem('contactName', data.contactName);
+            }
+            if (data.contactPhone) {
+                document.getElementById('contactPhone').value = data.contactPhone;
+                localStorage.setItem('contactPhone', data.contactPhone);
+            }
+            if (data.contactEmail) {
+                document.getElementById('contactEmail').value = data.contactEmail;
+                localStorage.setItem('contactEmail', data.contactEmail);
+            }
+            if (data.contactLine) {
+                document.getElementById('contactLine').value = data.contactLine;
+                localStorage.setItem('contactLine', data.contactLine);
+            }
+
+            showToast('✅ โหลดข้อมูลเดิมเรียบร้อยแล้ว');
+        }
+    } catch (error) {
+        console.error('Fetch error:', error);
+        // Silently fail if no data or error
+    }
+}

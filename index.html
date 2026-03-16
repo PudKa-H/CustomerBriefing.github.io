@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <script src="script.js"></script>
   <link rel="stylesheet" href="style.css">
   <title>customer-briefing-form</title>
@@ -11,8 +12,18 @@
 
 <body>
 
+  <!-- LIFF Loading Overlay -->
+  <div id="liffLoading" class="overlay">
+    <div class="loader"></div>
+    <p>กำลังเชื่อมต่อกับ LINE...</p>
+  </div>
+
   <div class="container">
     <div class="header">
+      <div id="userProfile" class="user-profile" style="display: none;">
+        <img id="userImg" src="" alt="Profile" />
+        <span id="userName"></span>
+      </div>
       <h1>📋 Customer Briefing Form</h1>
       <p>กรอกข้อมูลด้วยการพิมพ์ หรือกดปุ่ม 🎤 เพื่อพูดกรอกข้อมูล</p>
     </div>

@@ -2,7 +2,7 @@
 // CONFIGURATION
 // ============================================================
 // ใส่ Web App URL ที่ได้จากการ Deploy Google Apps Script ตรงนี้
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbykVNKmHP0GFRgnuvAVT87oHVRV_3itPNYNDn0rhqUZvdAyiX9HKpBWHIn5mCa0hc98/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz5IctlYOLKOexlLqNGMwMgAVNmMY2wgCTw6bHftZJm4jxIXcBxFU1sCvcRT8KUiBtV/exec";
 const LIFF_ID = "2009416786-VFmrGJIF";
 
 let lineUserId = null;

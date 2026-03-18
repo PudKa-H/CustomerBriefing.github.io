@@ -2,7 +2,7 @@
 // CONFIGURATION
 // ============================================================
 // ใส่ Web App URL ที่ได้จากการ Deploy Google Apps Script ตรงนี้
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyRTAbZERV_NhXlDrLxejpoZYQB7jeFkkz26lYYZ6ShCErzTlhtPpk4fEl5iQ4NTDZn/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxmA8eGs_ANkW5Wm8hJ50feQuVT44Ck90SQ6w08UIyNWG_WYe61sajSZ0gYBFprAZO8/exec";
 const LIFF_ID = "2009416786-VFmrGJIF";
 
 let lineUserId = null;
@@ -362,7 +362,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             try {
                 const formData = await getFormDataAsync();
-                
+
                 // Debugging: แสดงข้อมูลที่กำลังจะส่งใน Console
                 console.log("📤 กำลังส่งข้อมูลไปยัง Google Sheets:", formData);
 
@@ -386,7 +386,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 localStorage.removeItem('contactPhone');
                 localStorage.removeItem('contactEmail');
                 localStorage.removeItem('contactLine');
-                
+
                 // Reset Multi-step
                 document.getElementById('step-' + currentStep).classList.remove('active');
                 currentStep = 1;
@@ -430,6 +430,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return {
             userId: lineUserId,
             userName: lineUserName,
+            userPicture: lineUserPicture,
             project: document.getElementById('project').value,
             brand: document.getElementById('brand').value,
             background: document.getElementById('background').value,
@@ -440,8 +441,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             activity: document.getElementById('activity').value,
             platforms,
             platformOther: document.getElementById('platformOther').value,
-            member: document.querySelector('input[name="memberChoice"]:checked').value === 'has' 
-                ? `มี: ${document.getElementById('memberDetail').value}` 
+            member: document.querySelector('input[name="memberChoice"]:checked').value === 'has'
+                ? `มี: ${document.getElementById('memberDetail').value}`
                 : `ไม่มี (สร้างระบบให้: ${document.querySelector('input[name="memberCreate"]:checked').value === 'yes' ? 'ต้องการ' : 'ไม่ต้องการ'})`,
             promotion: document.getElementById('promotion').value,
             timing: `${document.getElementById('timingStart').value} ถึง ${document.getElementById('timingEnd').value}`,
@@ -487,7 +488,7 @@ async function loadUserData() {
             if (data.details) document.getElementById('details').value = data.details;
             if (data.activity) document.getElementById('activity').value = data.activity;
             if (data.platformOther) document.getElementById('platformOther').value = data.platformOther;
-            
+
             // Member handling
             if (data.member) {
                 if (data.member.startsWith('มี:')) {
